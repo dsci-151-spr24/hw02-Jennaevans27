@@ -11,7 +11,7 @@ link-citations: true
 
 ```{r include = FALSE}
 knitr::opts_chunk$set(
-  eval = FALSE,
+  eval = TRUE,
   out.width = "80%",
   fig.asp = 0.618,
   fig.width = 10,
@@ -289,14 +289,51 @@ college_recent_grads %>%
 
 8.  Which STEM majors have median salaries equal to or less than the median for all majors' median earnings? Your output should only show the major name and median, 25th percentile, and 75th percentile earning for that major as and should be sorted such that the major with the highest median earning is on top.
 
+***Geosciences***
+
+```{r}
+college_recent_grads %>%
+  filter(major_category %in% stem_categories & median <=36000) %>%
+  select(major, median, p25th, p75th) %>%
+  arrange(desc(median))
+```
 🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.*
 
 ## What types of majors do women tend to major in?
 
 9.  Create a scatterplot of median income vs. proportion of women in that major, coloured by whether the major is in a STEM field or not. Describe the association between these three variables.
 
+```{r scatterplot}
+ggplot(data = college_recent_grads, 
+       mapping = aes(x = women, y = median, colour = major_category %in% stem_categories)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    x = "Proportion of women",
+    y = "Median income",
+    title = "Distribution of median earnings by major_category",
+    colour = "major_category %in% stem_categories"
+  )
+```
+
+***The assiocation is positive for regular majors and women but there is a less proportion of women who major in Stem but have a higher median income.*** 
+
 ## Further exploration
 
 10. Ask a question of interest to you, and answer it using summary statistic(s) and/or visualization(s).
 
+***What is the relationship of median income vs. proportion of men in stem majors vs non stem majors?***  
+
+**Both catogories have a postive relationship, with men in stem majors is stronger and have a higher median income than men who don't major in stem.**
+
+```{r scatterplot_02}
+ggplot(data = college_recent_grads, 
+       mapping = aes(x = men, y = median, colour = major_category %in% stem_categories)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    x = "Proportion of men",
+    y = "Median income",
+    title = "Distribution of median earnings by major_category",
+    colour = "major_category %in% stem_categories"
+  )
+```
 🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards and review the md document on GitHub to make sure you're happy with the final state of your work.*
