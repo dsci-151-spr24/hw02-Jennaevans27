@@ -83,6 +83,7 @@ In the next section we aim to answer these questions.
 # Exercises
 
 ## Which major has the lowest unemployment rate?
+*** Mathematics And Computer Science has the lowest unemployment rate.***
 
 In order to answer this question all we need to do is sort the data.
 We use the `arrange` function to do this, and sort it by the `unemployment_rate` variable.
@@ -122,7 +123,8 @@ college_recent_grads %>%
   mutate(unemployment_rate = percent(unemployment_rate))
 ```
 
-## Which major has the highest percentage of women?
+## Which major has the highest percentage of women?  
+***Psychology*** 
 
 To answer such a question we need to arrange the data in descending order.
 For example, if earlier we were interested in the major with the highest unemployment rate, we would use the following:
@@ -139,6 +141,14 @@ college_recent_grads %>%
 
 1.  Using what you've learned so far, arrange the data in descending order with respect to proportion of women in a major, and display only the major, the total number of people with major, and proportion of women. Show only the top 3 majors by adding `top_n(3)` at the end of the pipeline.
 
+```{r}
+college_recent_grads %>%
+  arrange(desc(women)) %>%
+  select(major, total, women) %>%
+  top_n(3, wt = women)
+
+```
+
 ## How do the distributions of median income compare across major categories?
 
 ```{marginfigure}
@@ -149,6 +159,8 @@ There are three types of incomes reported in this data frame: `p25th`, `median`,
 These correspond to the 25th, 50th, and 75th percentiles of the income distribution of sampled individuals for a given major.
 
 2.  Why do we often choose the median, rather than the mean, to describe the typical income of a group of people?
+
+***We use the median instead of the mean to describe typical income because it is not affected by outliers or skewed distributions, making it a it a more accurate representation of what most people earn.*** 
 
 The question we want to answer "How do the distributions of median income compare across major categories?".
 We need to do a few things to answer this question: First, we need to group the data by `major_category`.
@@ -163,7 +175,7 @@ Let's start simple and take a look at the distribution of all median incomes, wi
 
 ```{r fig,height=2}
 ggplot(data = college_recent_grads, mapping = aes(x = median)) +
-  geom_histogram()
+  geom_histogram(binwidth = 5000)
 ```
 
 Along with the plot, we get a message:
@@ -189,26 +201,39 @@ college_recent_grads %>%
 
 4.  Based on the shape of the histogram you created in the previous exercise, determine which of these summary statistics is useful for describing the distribution.
     Write up your description (remember shape, center, spread, any unusual observations) and include the summary statistic output as well.
+    
+   ***The histograme is skewed to the left,therefor the median is bet at describing the distribution, becuase it is not affected by the extream lows and highes (outliers) of the data rather the middle points*** 
 
 5.  Plot the distribution of `median` income using a histogram, faceted by `major_category`.
     Use the `binwidth` you chose in the earlier exercise.
 
+```{r Histogram_2, fig,height=3}
+ggplot(data = college_recent_grads, mapping = aes(x = median)) +
+  geom_histogram(binwidth = 5000)+ 
+  facet_wrap(~ major_category)
+```
 Now that we've seen the shapes of the distributions of median incomes for each major category, we should have a better idea for which summary statistic to use to quantify the typical median income.
 
 6.  Which major category has the highest typical (you'll need to decide what this means) median income? Use the partial code below, filling it in with the appropriate statistic and function. Also note that we are looking for the highest statistic, so make sure to arrange in the correct direction.
 
+***Engineering***
+
 ```{r eval=FALSE}
 college_recent_grads %>%
   group_by(major_category) %>%
-  summarise(___ = ___(median)) %>%
-  arrange(___)
+  summarise(median_income = median(median)) %>%
+  arrange(desc(median_income))
 ```
 
 7.  Which major category is the least popular in this sample? To answer this question we use a new function called `count`, which first groups the data and then counts the number of observations in each category (see below). Add to the pipeline appropriately to arrange the results so that the major with the lowest observations is on top.
 
+***Interdisciplinary*** 
+
+
 ```{r}
 college_recent_grads %>%
-  count(major_category)
+  count(major_category) %>%
+ arrange(n) 
 ```
 
 🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.*
